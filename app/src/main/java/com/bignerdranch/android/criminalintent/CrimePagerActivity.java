@@ -42,7 +42,8 @@ public class CrimePagerActivity extends AppCompatActivity {
             @Override
             public Fragment getItem(int position) {
                 Crime crime = mCrimes.get(position);
-                return CrimeFragment.newInstance(crime.getId());
+                return CrimeFragment.newInstance(crime.getId(),getIntent()
+                        .getBooleanExtra(EXTRA_SUBTITLE_VISIBLE,false));
             }
 
             @Override
@@ -70,9 +71,9 @@ public class CrimePagerActivity extends AppCompatActivity {
     @Override
     public Intent getParentActivityIntent() {
         Boolean subtitleVisible = getIntent().getBooleanExtra(EXTRA_SUBTITLE_VISIBLE, false);
-        Intent intent = new Intent(this, CrimeListActivity.class);
-        intent.putExtra(EXTRA_SUBTITLE_VISIBLE,subtitleVisible);
-
-        return intent;
+        //Intent intent = new Intent(this, CrimeListActivity.class);
+        //intent.putExtra(EXTRA_SUBTITLE_VISIBLE,subtitleVisible);
+        //return intent;
+        return CrimeListActivity.newIntent(this,subtitleVisible);
     }
 }
