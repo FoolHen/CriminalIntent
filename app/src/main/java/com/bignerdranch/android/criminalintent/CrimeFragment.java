@@ -9,6 +9,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -23,6 +26,7 @@ import java.util.UUID;
 public class CrimeFragment extends Fragment{
 
     private static final String ARG_CRIME_ID = "crime_id";
+    private static final String ARG_SUBTITLE_VISIBLE = "subtitle_visible";
     private static final String DIALOG_DATE = "DialogDate";
     private static final String DIALOG_TIME = "DialogTime";
     private static final int REQUEST_DATE = 0;
@@ -34,9 +38,10 @@ public class CrimeFragment extends Fragment{
     private Button mTimeButton;
     private CheckBox mSolvedCheckBox;
 
-    public static CrimeFragment newInstance(UUID crimeId){
+    public static CrimeFragment newInstance(UUID crimeId,boolean subtitleVisible){
         Bundle args =  new Bundle();
         args.putSerializable(ARG_CRIME_ID, crimeId);
+        args.putSerializable(ARG_SUBTITLE_VISIBLE, subtitleVisible);
 
         CrimeFragment fragment = new CrimeFragment();
         fragment.setArguments(args);
@@ -48,6 +53,7 @@ public class CrimeFragment extends Fragment{
         super.onCreate(savedInstanceState);
         UUID crimeId =(UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
+        setHasOptionsMenu(true);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -143,5 +149,22 @@ public class CrimeFragment extends Fragment{
         updateDateAndTime();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_crime, menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.menu_item_delete_crime){
+            CrimeLab.get(getActivity()).deleteCrime(mCrime);
+            //Intent intent = new Intent(getActivity(), CrimeListActivity.class);
+            //intent.putExtra();
+            boolean subtitleVisible =  getArguments().getBoolean(ARG_SUBTITLE_VISIBLE,false);
+            Intent intent = CrimeListActivity.newIntent(getActivity() ,subtitleVisible);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
