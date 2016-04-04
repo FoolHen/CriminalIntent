@@ -6,15 +6,16 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -25,11 +26,10 @@ public class CrimeListFragment extends Fragment {
     private static final String EXTRA_SUBTITLE_VISIBLE = "com.bignerdranch.android.criminalintent.subtitle";
     private static final String ARG_SUBTITLE_VISIBLE = "subtitle_visible";
 
-
+    private LinearLayout mHelpBox;
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
     private boolean mSubtitleVisible;
-    //private int mLastAdapterClickPosition = -1;
     public static CrimeListFragment newInstance(Boolean subtitleVisible) {
 
         Bundle args = new Bundle();
@@ -61,6 +61,7 @@ setHasOptionsMenu(true);
         if (savedInstanceState != null){
         mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
         }
+        mHelpBox = (LinearLayout) view.findViewById(R.id.empty_view);
 
 
         updateUI();
@@ -88,6 +89,20 @@ setHasOptionsMenu(true);
                 mLastAdapterClickPosition = -1;
             }*/
         }
+        if(CrimeLab.get(getActivity()).getCrimes().size()==0){
+            Button button = (Button) mHelpBox.findViewById(R.id.add_crime_button);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Crime crime= new Crime();
+                    CrimeLab.get(getActivity()).addCrime(crime);
+                    Intent intent = CrimePagerActivity
+                            .newIntent(getActivity(),crime.getId(), mSubtitleVisible);
+                    startActivity(intent);
+                }
+            });
+        }else mHelpBox.setVisibility(View.GONE);
+
         updateSubtitle();
     }
     private class CrimeHolder extends RecyclerView.ViewHolder {
@@ -188,7 +203,8 @@ setHasOptionsMenu(true);
     private void updateSubtitle(){
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         int crimeCount = crimeLab.getCrimes().size();
-        String subtitle = getString(R.string.subtitle_format, crimeCount);
+        String subtitle = getResources()
+                .getQuantityString(R.plurals.subtitle_plural, crimeCount,  crimeCount);
 
         if (!mSubtitleVisible) {
             subtitle = null;
