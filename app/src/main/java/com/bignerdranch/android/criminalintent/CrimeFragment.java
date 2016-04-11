@@ -2,6 +2,7 @@ package com.bignerdranch.android.criminalintent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -55,6 +56,14 @@ public class CrimeFragment extends Fragment{
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
         setHasOptionsMenu(true);
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -159,12 +168,14 @@ public class CrimeFragment extends Fragment{
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.menu_item_delete_crime){
             CrimeLab.get(getActivity()).deleteCrime(mCrime);
-            //Intent intent = new Intent(getActivity(), CrimeListActivity.class);
-            //intent.putExtra();
+
             boolean subtitleVisible =  getArguments().getBoolean(ARG_SUBTITLE_VISIBLE,false);
             Intent intent = CrimeListActivity.newIntent(getActivity() ,subtitleVisible);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            getActivity().finish();
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

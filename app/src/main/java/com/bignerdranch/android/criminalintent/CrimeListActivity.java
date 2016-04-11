@@ -19,6 +19,7 @@ public class CrimeListActivity extends SingleFragmentActivity {
     public static Intent newIntent(Context packageContext, boolean subtitleVisible) {
         Intent intent = new Intent(packageContext, CrimeListActivity.class);
         intent.putExtra(EXTRA_SUBTITLE_VISIBLE, subtitleVisible);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
         return intent;
     }

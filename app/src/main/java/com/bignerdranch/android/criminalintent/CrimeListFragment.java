@@ -83,6 +83,7 @@ setHasOptionsMenu(true);
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else{
             //if(mLastAdapterClickPosition<0){
+                mAdapter.setCrimes(crimes);
                 mAdapter.notifyDataSetChanged();
             /*}else {
                 mAdapter.notifyItemChanged(mLastAdapterClickPosition);
@@ -96,9 +97,11 @@ setHasOptionsMenu(true);
                 public void onClick(View v) {
                     Crime crime= new Crime();
                     CrimeLab.get(getActivity()).addCrime(crime);
+
                     Intent intent = CrimePagerActivity
                             .newIntent(getActivity(),crime.getId(), mSubtitleVisible);
                     startActivity(intent);
+
                 }
             });
         }else mHelpBox.setVisibility(View.GONE);
@@ -166,6 +169,9 @@ setHasOptionsMenu(true);
         @Override
         public int getItemCount() {
             return mCrimes.size();
+        }
+        public void setCrimes(List<Crime> crimes){
+            mCrimes = crimes;
         }
     }
 

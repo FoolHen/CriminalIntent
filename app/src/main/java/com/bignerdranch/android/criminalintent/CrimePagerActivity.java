@@ -71,9 +71,6 @@ public class CrimePagerActivity extends AppCompatActivity {
     @Override
     public Intent getParentActivityIntent() {
         Boolean subtitleVisible = getIntent().getBooleanExtra(EXTRA_SUBTITLE_VISIBLE, false);
-        //Intent intent = new Intent(this, CrimeListActivity.class);
-        //intent.putExtra(EXTRA_SUBTITLE_VISIBLE,subtitleVisible);
-        //return intent;
         return CrimeListActivity.newIntent(this,subtitleVisible);
     }
 }
