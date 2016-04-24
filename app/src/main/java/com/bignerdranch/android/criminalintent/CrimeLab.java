@@ -81,6 +81,7 @@ public class CrimeLab {
         values.put(CrimeTable.Cols.TITLE, crime.getTitle());
         values.put(CrimeTable.Cols.DATE, crime.getDate().getTime());
         values.put(CrimeTable.Cols.SOLVED,crime.isSolved());
+        values.put(CrimeTable.Cols.SUSPECT,crime.getSuspect());
 
         return values;
     }
@@ -102,7 +103,7 @@ public class CrimeLab {
                 null, //Columns - null selects all columns
                 whereClause,
                 whereArgs,
-                null, //grupBy
+                null, //groupBy
                 null, //having
                 null //orderBy
         );
