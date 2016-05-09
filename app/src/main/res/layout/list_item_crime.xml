@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
 
     <CheckBox
@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:padding="4dp"/>
+        android:layout_margin="16dp" />
 
     <TextView
         android:id="@+id/list_item_crime_title_text_view"
@@ -17,14 +17,26 @@
         android:layout_height="wrap_content"
         android:text="Crime Title"
         android:layout_toLeftOf="@id/list_item_crime_solved_check_box"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:textSize="18dp"
+        android:layout_marginBottom="8dp" />
     <TextView
         android:id="@+id/list_item_crime_date_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Crime Date"
-        android:padding="4dp"
         android:layout_below="@+id/list_item_crime_title_text_view"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="16dp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_below="@+id/list_item_crime_title_text_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
 </RelativeLayout>
