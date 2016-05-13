@@ -49,6 +49,7 @@ public class CrimeFragment extends Fragment{
     private static final String ARG_SUBTITLE_VISIBLE = "subtitle_visible";
     private static final String DIALOG_DATE = "DialogDate";
     private static final String DIALOG_TIME = "DialogTime";
+    private static final String DIALOG_IMAGE = "DialogImage";
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_TIME =1;
     private static final int REQUEST_CONTACT =2;
@@ -56,9 +57,8 @@ public class CrimeFragment extends Fragment{
     private static final int REQUEST_SELECT_PHOTO = 4;
 
     private static final int REQUEST_PERMISSION_READ_CONTACTS = 5;
-    private static final int REQUEST_PERMISSION_READ_EXT_STORAGE_TAKE = 6;
-    private static final int REQUEST_PERMISSION_READ_EXT_STORAGE_CHOOSE = 7;
-    private static final int REQUEST_PERMISSION_WRITE_EXT_STORAGE = 8;
+    private static final int REQUEST_PERMISSION_READ_EXT_STORAGE = 6;
+    private static final int REQUEST_PERMISSION_WRITE_EXT_STORAGE = 7;
 
 
     private Crime mCrime;
@@ -277,7 +277,7 @@ public class CrimeFragment extends Fragment{
                 if (permissionCheck!=PackageManager.PERMISSION_GRANTED){
                     CrimeFragment.this.requestPermissions(new String[]
                             {Manifest.permission.READ_EXTERNAL_STORAGE}
-                            ,REQUEST_PERMISSION_READ_EXT_STORAGE_TAKE);
+                            ,REQUEST_PERMISSION_READ_EXT_STORAGE);
                 } else {
 
                     startActivityForResult(captureImage,REQUEST_TAKE_PHOTO);
@@ -290,33 +290,17 @@ public class CrimeFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.READ_EXTERNAL_STORAGE);
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 if (permissionCheck!=PackageManager.PERMISSION_GRANTED){
                     CrimeFragment.this.requestPermissions(new String[]
-                            {Manifest.permission.READ_EXTERNAL_STORAGE}
-                            ,REQUEST_PERMISSION_READ_EXT_STORAGE_CHOOSE);
+                            {Manifest.permission.WRITE_EXTERNAL_STORAGE}
+                            ,REQUEST_PERMISSION_WRITE_EXT_STORAGE);
                 } else {
-                    permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                    if (permissionCheck!=PackageManager.PERMISSION_GRANTED){
-                        CrimeFragment.this.requestPermissions(new String[]
-                                        {Manifest.permission.WRITE_EXTERNAL_STORAGE}
-                                ,REQUEST_PERMISSION_WRITE_EXT_STORAGE);
-                    } else {
-                        final Intent chooseImage = new Intent(Intent.ACTION_PICK,
-                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    final Intent chooseImage = new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-                        chooseImage.setType("image/*");
-                        startActivityForResult(chooseImage, REQUEST_SELECT_PHOTO);
-
-                    /*boolean canChoosePhoto = mPhotoFile!=null &&
-                            chooseImage.resolveActivity(packageManager)!=null;
-                    if (canChoosePhoto){
-                        Uri uri = Uri.fromFile(mPhotoFile);
-                        chooseImage.putExtra(MediaStore.EXTRA_OUTPUT,uri);
-                    }*/
-                    }
-
+                    chooseImage.setType("image/*");
+                    startActivityForResult(chooseImage, REQUEST_SELECT_PHOTO);
                 }
             }
         });
@@ -326,7 +310,13 @@ public class CrimeFragment extends Fragment{
         mPhotoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Log.d("fulgen",mPhotoFile.getPath());
+                Log.d("fulgen",Uri.fromFile(mPhotoFile).toString());
+                if (mPhotoFile != null && mPhotoFile.exists()) {
+                    FragmentManager manager = getFragmentManager();
+                    ImageFragment imageFragment = ImageFragment.newInstance(Uri.fromFile(mPhotoFile));
+                    imageFragment.show(manager, DIALOG_IMAGE);
+                }
             }
         });
 
@@ -348,25 +338,12 @@ public class CrimeFragment extends Fragment{
     private void updatePhotoView() {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
             mPhotoView.setImageDrawable(null);
-            Log.d("FULGEN","mPhotoFile es null");
         } else {
             Bitmap bitmap = PictureUtils.getScaledBitmap(
                     mPhotoFile.getPath(), getActivity());
             mPhotoView.setImageBitmap(bitmap);
-            Log.d("FULGEN","mPhotoFile no es null");
         }
     }
-    /*private void updatePhotoView(File file) {
-        /*if (file == null || !file.exists()) {
-            mPhotoView.setImageDrawable(null);
-            Log.d("FULGEN","mPhotoFile es null");
-        } else {
-            Bitmap bitmap = PictureUtils.getScaledBitmap(
-                    file.getPath(), getActivity());
-            mPhotoView.setImageBitmap(bitmap);
-            Log.d("FULGEN","mPhotoFile no es null");
-        //}
-    }*/
 
     //Results
     @Override
@@ -486,7 +463,7 @@ public class CrimeFragment extends Fragment{
                     startActivityForResult(pickContact, REQUEST_CONTACT);
                 }
                 break;
-            case REQUEST_PERMISSION_READ_EXT_STORAGE_TAKE:
+            case REQUEST_PERMISSION_READ_EXT_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //Intent pickContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                     //startActivityForResult(pickContact, REQUEST_CONTACT);
@@ -499,29 +476,19 @@ public class CrimeFragment extends Fragment{
                     if (canTakePhoto){
                         Uri uri = Uri.fromFile(mPhotoFile);
                         captureImage.putExtra(MediaStore.EXTRA_OUTPUT,uri);
-                        Log.d("FULGEN","URI EXTRA PUESTO / mPhotoFile no es null");
                     }
                     startActivityForResult(captureImage,REQUEST_TAKE_PHOTO);
                 }
                 break;
-            case REQUEST_PERMISSION_READ_EXT_STORAGE_CHOOSE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                    if (permissionCheck!=PackageManager.PERMISSION_GRANTED){
-                        CrimeFragment.this.requestPermissions(new String[]
-                                        {Manifest.permission.READ_EXTERNAL_STORAGE}
-                                ,REQUEST_PERMISSION_WRITE_EXT_STORAGE);
-                    } else {
-                        //
-
-                    }
-                }break;
             case REQUEST_PERMISSION_WRITE_EXT_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //
-                }
-                break;
+                    final Intent chooseImage = new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                    chooseImage.setType("image/*");
+                    startActivityForResult(chooseImage, REQUEST_SELECT_PHOTO);
+                }break;
+
             default: break;
 
 
@@ -539,6 +506,9 @@ public class CrimeFragment extends Fragment{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.menu_item_delete_crime){
+            if (mPhotoFile!=null&&mPhotoFile.exists()){
+                mPhotoFile.delete();
+            }
             CrimeLab.get(getActivity()).deleteCrime(mCrime);
 
             boolean subtitleVisible =  getArguments().getBoolean(ARG_SUBTITLE_VISIBLE,false);

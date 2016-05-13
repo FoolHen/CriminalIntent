@@ -25,6 +25,16 @@ public class DatePickerFragment extends DialogFragment{
             "com.bignerdranch.android.criminalintent.date";
     private DatePicker mDatePicker;
 
+    public static DatePickerFragment newInstance(Date date) {
+
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_DATE,date);
+
+        DatePickerFragment fragment = new DatePickerFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -56,16 +66,6 @@ public class DatePickerFragment extends DialogFragment{
                     }
                 })
                 .create();
-    }
-
-    public static DatePickerFragment newInstance(Date date) {
-
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_DATE,date);
-
-        DatePickerFragment fragment = new DatePickerFragment();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     private void sendResults(int resultCode, Date date){
