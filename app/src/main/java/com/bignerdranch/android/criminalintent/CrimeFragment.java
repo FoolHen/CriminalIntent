@@ -20,7 +20,6 @@ import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -210,15 +209,6 @@ public class CrimeFragment extends Fragment{
                     startActivity(i);
                 }
 
-
-                /*
-                Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("text/plain");
-                i.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
-                i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject));
-                i = Intent.createChooser(i,getString(R.string.send_report));
-                startActivity(i);
-                */
             }
         });
         final Intent pickContact = new Intent(Intent.ACTION_PICK,
@@ -472,21 +462,6 @@ public class CrimeFragment extends Fragment{
                     }
                 } catch (Exception e) {
                 }
-
-
-
-
-                /*if (data==null) break;
-                Uri uri = data.getData();
-
-
-                File file = new File(uri.getPath());
-                Bitmap bitmap = PictureUtils.getScaledBitmap(
-                        file.getPath(), getActivity());
-                mPhotoView.setImageBitmap(bitmap);
-                Log.d("FULGEN","mPhotoFile no es null");
-
-                break;*/
             default:
                 break;
         }

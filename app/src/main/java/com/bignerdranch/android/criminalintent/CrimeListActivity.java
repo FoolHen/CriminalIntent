@@ -34,7 +34,6 @@ public class CrimeListActivity extends SingleFragmentActivity
             Intent intent = CrimePagerActivity.newIntent(this,crime.getId(),isSubtitleVisible);
             intent.putExtra(EXTRA_SUBTITLE_VISIBLE,isSubtitleVisible);
             startActivity(intent);
-            onCrimeUpdated();
         }else {
             //Tablet
             Fragment newDetail = CrimeFragment.newInstance(crime.getId(),isSubtitleVisible);

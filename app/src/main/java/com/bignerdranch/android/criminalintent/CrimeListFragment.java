@@ -1,14 +1,11 @@
 package com.bignerdranch.android.criminalintent;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,7 +23,6 @@ import java.util.List;
 public class CrimeListFragment extends Fragment {
 
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
-    private static final String EXTRA_SUBTITLE_VISIBLE = "com.bignerdranch.android.criminalintent.subtitle";
     private static final String ARG_SUBTITLE_VISIBLE = "subtitle_visible";
 
     private LinearLayout mHelpBox;
@@ -51,21 +47,10 @@ public class CrimeListFragment extends Fragment {
         void onCrimeSelected(Crime crime,boolean isSubtitleVisible);
     }
 
-    /*@Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mCallbacks = (CallBacks) activity;
-    }*/
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         mCallbacks = (CallBacks) context;
-        /*Activity a;
-        if (context instanceof Activity){
-
-        }*/
     }
 
     @Override
@@ -109,13 +94,8 @@ setHasOptionsMenu(true);
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else{
-            //if(mLastAdapterClickPosition<0){
-                mAdapter.setCrimes(crimes);
-                mAdapter.notifyDataSetChanged();
-            /*}else {
-                mAdapter.notifyItemChanged(mLastAdapterClickPosition);
-                mLastAdapterClickPosition = -1;
-            }*/
+            mAdapter.setCrimes(crimes);
+            mAdapter.notifyDataSetChanged();
         }
         if(CrimeLab.get(getActivity()).getCrimes().size()==0){
             if (mHelpBox.getVisibility()==View.GONE){
@@ -145,11 +125,6 @@ setHasOptionsMenu(true);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //mLastAdapterClickPosition = getAdapterPosition();
-                    /*Intent intent = CrimePagerActivity
-                            .newIntent(getActivity(),mCrime.getId(), mSubtitleVisible);
-                    intent.putExtra(EXTRA_SUBTITLE_VISIBLE,mSubtitleVisible);
-                    startActivity(intent);*/
                     mCallbacks.onCrimeSelected(mCrime,mSubtitleVisible);
                 }
             });
@@ -220,11 +195,8 @@ setHasOptionsMenu(true);
             case R.id.menu_item_new_crime:
                 Crime crime = new Crime();
                 CrimeLab.get(getActivity()).addCrime(crime);
-                /*Intent intent = CrimePagerActivity
-                        .newIntent(getActivity(),crime.getId(), mSubtitleVisible);
-                startActivity(intent);*/
+
                 mCallbacks.onCrimeSelected(crime,mSubtitleVisible);
-                updateUI();
                 return true;
             case R.id.menu_item_show_subtitle:
                 mSubtitleVisible = !mSubtitleVisible;
