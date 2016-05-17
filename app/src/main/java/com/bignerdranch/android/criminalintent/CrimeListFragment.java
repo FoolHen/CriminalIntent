@@ -1,5 +1,7 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,6 +32,8 @@ public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
     private boolean mSubtitleVisible;
+    private CallBacks mCallbacks;
+
     public static CrimeListFragment newInstance(Boolean subtitleVisible) {
 
         Bundle args = new Bundle();
@@ -39,7 +43,29 @@ public class CrimeListFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+    /* Interfaz para que la actividad se encarge de los fragmentos
+        para que estos sean totalmente independientes
+     */
+    public interface CallBacks{
+        void onCrimeSelected(Crime crime,boolean isSubtitleVisible);
+    }
 
+    /*@Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mCallbacks = (CallBacks) activity;
+    }*/
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        mCallbacks = (CallBacks) context;
+        /*Activity a;
+        if (context instanceof Activity){
+
+        }*/
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +101,7 @@ setHasOptionsMenu(true);
         updateUI();
     }
 
-    private void updateUI() {
+    public void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
         if(mAdapter==null) {
@@ -98,9 +124,10 @@ setHasOptionsMenu(true);
                     Crime crime= new Crime();
                     CrimeLab.get(getActivity()).addCrime(crime);
 
-                    Intent intent = CrimePagerActivity
+                    /*Intent intent = CrimePagerActivity
                             .newIntent(getActivity(),crime.getId(), mSubtitleVisible);
-                    startActivity(intent);
+                    startActivity(intent);*/
+                    mCallbacks.onCrimeSelected(crime,mSubtitleVisible);
 
                 }
             });
@@ -120,10 +147,11 @@ setHasOptionsMenu(true);
                 @Override
                 public void onClick(View v) {
                     //mLastAdapterClickPosition = getAdapterPosition();
-                    Intent intent = CrimePagerActivity
+                    /*Intent intent = CrimePagerActivity
                             .newIntent(getActivity(),mCrime.getId(), mSubtitleVisible);
                     intent.putExtra(EXTRA_SUBTITLE_VISIBLE,mSubtitleVisible);
-                    startActivity(intent);
+                    startActivity(intent);*/
+                    mCallbacks.onCrimeSelected(mCrime,mSubtitleVisible);
                 }
             });
             mTitleTextView = (TextView) itemView.findViewById(R.id.list_item_crime_title_text_view);
@@ -193,9 +221,11 @@ setHasOptionsMenu(true);
             case R.id.menu_item_new_crime:
                 Crime crime = new Crime();
                 CrimeLab.get(getActivity()).addCrime(crime);
-                Intent intent = CrimePagerActivity
+                /*Intent intent = CrimePagerActivity
                         .newIntent(getActivity(),crime.getId(), mSubtitleVisible);
-                startActivity(intent);
+                startActivity(intent);*/
+                updateUI();
+                mCallbacks.onCrimeSelected(crime,mSubtitleVisible);
                 return true;
             case R.id.menu_item_show_subtitle:
                 mSubtitleVisible = !mSubtitleVisible;
@@ -224,5 +254,11 @@ setHasOptionsMenu(true);
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(SAVED_SUBTITLE_VISIBLE,mSubtitleVisible);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
     }
 }

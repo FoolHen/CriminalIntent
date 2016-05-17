@@ -19,11 +19,18 @@ import java.util.UUID;
 /**
  * Created by Fulgen on 29/03/2016.
  */
-public class CrimePagerActivity extends AppCompatActivity {
+public class CrimePagerActivity extends AppCompatActivity implements CrimeFragment.CallBacks{
     private ViewPager mViewPager;
     private List<Crime> mCrimes;
     private static final String EXTRA_CRIME_ID = "com.bignerdranch.android.criminalintent.crime_id";
     public static final String EXTRA_SUBTITLE_VISIBLE = "com.bignerdranch.android.criminalintent.subtitle_visible";
+
+    public static Intent newIntent(Context packageContext, UUID crimeId, boolean subtitleVisible) {
+        Intent intent = new Intent(packageContext, CrimePagerActivity.class);
+        intent.putExtra(EXTRA_CRIME_ID, crimeId);
+        intent.putExtra(EXTRA_SUBTITLE_VISIBLE,subtitleVisible);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,17 +67,15 @@ public class CrimePagerActivity extends AppCompatActivity {
         }
 
     }
-    public static Intent newIntent(Context packageContext, UUID crimeId, boolean subtitleVisible) {
-        Intent intent = new Intent(packageContext, CrimePagerActivity.class);
-        intent.putExtra(EXTRA_CRIME_ID, crimeId);
-        intent.putExtra(EXTRA_SUBTITLE_VISIBLE,subtitleVisible);
-        return intent;
-    }
-
     @Nullable
     @Override
     public Intent getParentActivityIntent() {
         Boolean subtitleVisible = getIntent().getBooleanExtra(EXTRA_SUBTITLE_VISIBLE, false);
         return CrimeListActivity.newIntent(this,subtitleVisible);
+    }
+
+    @Override
+    public void onCrimeUpdated(Crime crime) {
+
     }
 }
