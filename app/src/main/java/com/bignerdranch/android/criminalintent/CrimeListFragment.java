@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -117,18 +118,16 @@ setHasOptionsMenu(true);
             }*/
         }
         if(CrimeLab.get(getActivity()).getCrimes().size()==0){
+            if (mHelpBox.getVisibility()==View.GONE){
+                mHelpBox.setVisibility(View.VISIBLE);
+            }
             Button button = (Button) mHelpBox.findViewById(R.id.add_crime_button);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Crime crime= new Crime();
                     CrimeLab.get(getActivity()).addCrime(crime);
-
-                    /*Intent intent = CrimePagerActivity
-                            .newIntent(getActivity(),crime.getId(), mSubtitleVisible);
-                    startActivity(intent);*/
                     mCallbacks.onCrimeSelected(crime,mSubtitleVisible);
-
                 }
             });
         }else mHelpBox.setVisibility(View.GONE);
@@ -224,8 +223,8 @@ setHasOptionsMenu(true);
                 /*Intent intent = CrimePagerActivity
                         .newIntent(getActivity(),crime.getId(), mSubtitleVisible);
                 startActivity(intent);*/
-                updateUI();
                 mCallbacks.onCrimeSelected(crime,mSubtitleVisible);
+                updateUI();
                 return true;
             case R.id.menu_item_show_subtitle:
                 mSubtitleVisible = !mSubtitleVisible;

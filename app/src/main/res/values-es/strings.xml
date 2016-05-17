@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Ajustes</string>
+    <string name="crime_details_label">Detalles</string>
+    <string name="crime_report">%1$s! El crimen fue descubierto a %2$s. %3$s, y %4$s</string>
+    <string name="crime_report_no_suspect">no hay sospechoso.</string>
+    <string name="crime_report_solved">El caso está resuelto</string>
+    <string name="crime_report_subject">Informe de crimen de CriminalIntent</string>
+    <string name="crime_report_suspect">el sospechoso es %s.</string>
+    <string name="crime_report_text">Enviar informe de crimen</string>
+    <string name="crime_report_unsolved">El caso no está resuelto</string>
+    <string name="crime_solved_label">Resuelto</string>
+    <string name="crime_suspect_text">Seleccionar sospechoso</string>
+    <string name="crime_title_hint">Introduce título del crimen</string>
+    <string name="crime_title_label">Título</string>
+    <string name="date_picker_title">Fecha del crimen:</string>
+    <string name="delete_crime">Borrar</string>
+    <string name="hide_subtitle">Esconder subtítulo</string>
+    <string name="new_crime">Nuevo crimen</string>
+    <string name="no_crime">No hay crímenes</string>
+    <string name="send_report">Enviar informe vía</string>
+    <string name="show_subtitle">Mostrar subtítulo</string>
+    <string name="subtitle_format">%1$s crímenes</string>
+    <string name="suspect_call_text">Llamar al sospechoso</string>
+    <string name="time_picker_title">Hora del crimen:</string>
+</resources>

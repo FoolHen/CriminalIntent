@@ -34,7 +34,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -83,8 +82,8 @@ public class CrimeFragment extends Fragment{
         para que estos sean totalmente independientes
      */
     public interface CallBacks{
-        void onCrimeUpdated(Crime crime);
-        //void onCrimeDeleted(boolean subtitleVisible);
+        void onCrimeUpdated();
+        void onCrimeDeleted(boolean subtitleVisible);
     }
 
 
@@ -381,7 +380,7 @@ public class CrimeFragment extends Fragment{
     }
     private void updateCrime(){
         CrimeLab.get(getActivity()).updateCrime(mCrime);
-        mCallbacks.onCrimeUpdated(mCrime);
+        mCallbacks.onCrimeUpdated();
     }
 
     //Results
@@ -552,14 +551,8 @@ public class CrimeFragment extends Fragment{
             CrimeLab.get(getActivity()).deleteCrime(mCrime);
 
             boolean subtitleVisible =  getArguments().getBoolean(ARG_SUBTITLE_VISIBLE,false);
-            /*Intent intent = CrimeListActivity.newIntent(getActivity() ,subtitleVisible);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            getActivity().finish();
-            */
+            mCallbacks.onCrimeDeleted(subtitleVisible);
             updateCrime();
-            //mCallbacks.onCrimeDeleted(subtitleVisible);
-
         }
         return super.onOptionsItemSelected(item);
     }

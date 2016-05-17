@@ -75,7 +75,16 @@ public class CrimePagerActivity extends AppCompatActivity implements CrimeFragme
     }
 
     @Override
-    public void onCrimeUpdated(Crime crime) {
+    public void onCrimeUpdated() {
 
+    }
+
+    @Override
+    public void onCrimeDeleted(boolean subtitleVisible) {
+        //Phone
+        Intent intent = CrimeListActivity.newIntent(this ,subtitleVisible);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        this.finish();
     }
 }
